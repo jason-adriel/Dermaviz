@@ -1,0 +1,61 @@
+<div class="z-50 fixed top-5 left-1/2 transform -translate-x-1/2">
+    <app-menu btnLabel="Back" btnSeverity="danger" [isUserAuthenticated]="true" [isUsingBackButton]="true"></app-menu>
+</div>
+<p-card class="flex flex-col w-screen max-w-md mt-18 m-4">
+    <div class="mb-4">
+        <p-fieldset legend="Physical Examination Data" [toggleable]="true">
+            <form class="flex flex-col gap-2">
+                <p-floatlabel variant="on">
+                    <input pInputText id="submissionName" formControlName="submissionName" autocomplete="off"
+                        [fluid]="true" />
+                    <label for="submissionName">Submission Name</label>
+                </p-floatlabel>
+                <div class="flex gap-2">
+                    <p-floatlabel variant="on" class="flex flex-grow flex-1">
+                        <p-inputnumber id="age" inputId="age" mode="decimal" [min]="0" [max]="120" [maxFractionDigits]="0" [fluid]="true"/>
+                        <label for="age">Age</label>
+                    </p-floatlabel>
+                    <p-floatlabel variant="on" class="flex flex-grow">
+                        <p-select id="gender" [options]="textureOptions" optionLabel="name" [showClear]="true" [fluid]="true"/>
+                        <label for="gender">Gender</label>
+                    </p-floatlabel>
+                </div>
+                <p-floatlabel variant="on">
+                    <p-multiselect id="texture" optionLabel="name" display="chip" [options]="textureOptions" [fluid]="true"/>
+                    <label for="texture">Lesion Texture</label>
+                </p-floatlabel>
+                <p-floatlabel variant="on">
+                    <p-multiselect id="bodyParts" optionLabel="name" display="chip" [options]="textureOptions" [fluid]="true"/>
+                    <label for="bodyParts">Location of Lesion</label>
+                </p-floatlabel>
+                <p-floatlabel variant="on">
+                    <p-multiselect id="conditionSymptons" optionLabel="name" display="chip" [options]="textureOptions" [fluid]="true"/>
+                    <label for="conditionSymptoms">Relevant Symptoms</label>
+                </p-floatlabel>
+                <p-floatlabel variant="on">
+                    <p-select id="conditionDuration" [options]="textureOptions" optionLabel="name" [showClear]="true" [fluid]="true"/>
+                    <label for="conditionDuration">Condition Duration</label>
+                </p-floatlabel>
+            </form>
+                <div class="flex justify-center items-center mt-4">
+                <p-button label="What do these fields represent?" [link]="true" (onClick)="showInfoDialog()" />
+            </div>
+        </p-fieldset>
+    </div>
+    <p-fileupload name="file" chooseIcon="pi pi-cloud-upload" [chooseButtonProps]="{'severity': 'secondary'}"
+        [showUploadButton]="false" [showCancelButton]="false" [multiple]="false" accept="image/*" maxFileSize="1000000"
+        mode="advanced">
+        <ng-template #empty>
+            <div>Drag and drop an image of the skin area to be diagnosed here.</div>
+        </ng-template>
+        <ng-template #content>
+            <ul *ngIf="uploadedFiles.length">
+                <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
+            </ul>
+        </ng-template>
+    </p-fileupload>
+    <div class="mt-4 mb-4">
+        <p-button label="Submit for Diagnosis" icon="pi pi-save" severity="primary" class="mt-4" [fluid]="true"
+            (onClick)="addSubmission()" />
+    </div>
+</p-card>

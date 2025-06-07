@@ -1,0 +1,54 @@
+<div class="z-50 fixed top-5 left-1/2 transform -translate-x-1/2">
+    <app-menu btnLabel="Logout" btnSeverity="danger" [isUserAuthenticated]="true"></app-menu>
+</div>
+<div class="flex justify-between mb-4 gap-2">
+    <div>
+        <p-button class="max-md:hidden" [hidden]="!isDeleteButtonShown" label="Delete" icon="pi pi-trash" severity="danger" rounded />
+        <p-button class="md:hidden" [hidden]="!isDeleteButtonShown" icon="pi pi-trash" severity="danger" rounded />
+    </div>
+    <div class="flex gap-2">
+        <p-button class="max-md:hidden" label="Add Diagnosis" icon="pi pi-plus" severity="primary" rounded (onClick)="addSubmission()" />
+        <p-button class="md:hidden" icon="pi pi-plus" severity="primary" rounded (onClick)="addSubmission()" />
+        <div class="max-w-sm">
+            <p-iconfield iconPosition="left" class="ml-auto">
+                <p-inputicon>
+                    <i class="pi pi-search"></i>
+                </p-inputicon>
+                <input pInputText type="text" (input)="onGlobalFilter($event)"
+                    placeholder="Search" />
+            </p-iconfield>
+        </div>
+    </div>
+</div>
+<p-table #submissions responsiveLayout="scroll" size="small" sortMode="multiple"
+    (onHeaderCheckboxToggle)="onRowSelectChange()" (onRowSelect)="onRowSelectChange()"
+    (onRowUnselect)="onRowSelectChange()" [globalFilterFields]="['name', 'status', 'submissionTime']"
+    [(selection)]="selectedData" [tableStyle]="{'min-width': '90vw'}" [scrollable]="true" [value]="rowData"
+    [showGridlines]="true" [stripedRows]="true" [paginator]="true" [rows]="5">
+    <ng-template #header>
+        <tr>
+            <th style="width: 1rem; text-align: center;"><p-tableHeaderCheckbox /></th>
+            <th style="width: 1rem; text-align: center;">No.</th>
+            <th pSortableColumn="name" style="width: 15rem; text-align: center;">Submission Name</th>
+            <th pSortableColumn="submissionTime" class="max-md:hidden" style="width: 5rem; text-align: center;">Submission Time</th>
+            <th pSortableColumn="elapsedTime" class="max-md:hidden" style="width: 5rem; text-align: center;">Elapsed Time</th>
+            <th pSortableColumn="status" style="width: 5rem; text-align: center;">Status</th>
+            <th style="width: 1rem; text-align: center;">Result</th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-row let-index="rowIndex">
+        <tr>
+            <td style="text-align: center;">
+                <p-tableCheckbox [value]="row" />
+            </td>
+            <td style="text-align: center;">{{index + 1}}</td>
+            <td style="text-align: center;">{{row.name}}</td>
+            <td class="max-md:hidden" style="text-align: center;">{{row.submissionTime | date}}</td>
+            <td class="max-md:hidden" style="text-align: center;">{{row.elapsedTime | date}}</td>
+            <td style="text-align: center;">{{row.status}}</td>
+            <td style="text-align: center;">
+                <p-button icon="pi pi-eye" (click)="viewResult(row)" severity="secondary" rounded />
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

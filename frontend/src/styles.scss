@@ -1,1 +1,61 @@
-/* You can add global styles to this file, and also import other style files */
+@use "primeicons/primeicons.css";
+@use "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@plugin "tailwindcss-primeui";
+
+:root {
+    --font-family: 'Outfit', sans-serif;
+}
+
+html {
+    font-family: var(--font-family);
+}
+
+body {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.color-primary {
+    color: var(--p-primary-color);
+}
+
+// Fixes bug with input group and password
+.p-inputgroup p-password {
+    
+  width: 100%;
+
+  .p-password.p-inputwrapper {
+    width: inherit;
+  }
+
+  input {
+    border-radius: 0 var(--p-inputtext-border-radius) var(--p-inputtext-border-radius) 0;
+  }
+
+}
+
+main {
+  margin: 2rem;
+}
+
+.p-floatlabel > label {
+    z-index: 1;
+}
+
+.ngx-bar {
+  transition: width 0.4s ease, opacity 0.3s ease-out;
+}
+
+@media only screen and (max-width: 500px) {
+  html {
+    font-size: 82.5%;
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  html {
+    font-size: 62.5%;
+  }
+}
+

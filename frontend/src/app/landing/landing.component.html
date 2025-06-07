@@ -1,0 +1,66 @@
+<div class="flex flex-col items-center justify-center">
+    <p-card class="mb-4 w-110 max-w-lg">
+        @if(!isNewUser) {
+        <form [@flyIn] [formGroup]="userForm" class="flex flex-col gap-2 p-2">
+            <strong>Login into your account</strong>
+            <p-inputgroup>
+                <p-inputgroup-addon>
+                    <i class="pi pi-envelope"></i>
+                </p-inputgroup-addon>
+                <p-floatlabel variant="on">
+                    <input pInputText id="email" formControlName="email" autocomplete="off" />
+                    <label for="email">Email</label>
+                </p-floatlabel>
+            </p-inputgroup>
+            <p-inputgroup>
+                <p-inputgroup-addon>
+                    <i class="pi pi-lock"></i>
+                </p-inputgroup-addon>
+                <p-floatlabel variant="on">
+                    <p-password id="password" formControlName="password" [toggleMask]="true"></p-password>
+                    <label for="password">Password</label>
+                </p-floatlabel>
+            </p-inputgroup>
+        </form>
+        }
+        @else {
+        <form [@flyIn] [formGroup]="registerForm" class="flex flex-col gap-2 p-2">
+            <strong>Create a new account</strong>
+            <p>Get an <span class="color-primary font-light">automatic differential diagnosis</span> on skin conditions using the power of AI — no doctor visit needed.</p>
+            <p-inputgroup>
+                <p-floatlabel variant="on">
+                    <input pInputText id="firstName" formControlName="firstName" autocomplete="off" />
+                    <label for="firstName">First Name</label>
+                </p-floatlabel>
+                <p-floatlabel variant="on">
+                    <input pInputText id="lastName" formControlName="lastName" autocomplete="off" />
+                    <label for="lastName">Last Name</label>
+                </p-floatlabel>
+            </p-inputgroup>
+            <p-inputgroup>
+                <p-inputgroup-addon>
+                    <i class="pi pi-envelope"></i>
+                </p-inputgroup-addon>
+                <p-floatlabel variant="on">
+                    <input pInputText id="email" formControlName="email" autocomplete="off" />
+                    <label for="email">Email</label>
+                </p-floatlabel>
+            </p-inputgroup>
+            <p-inputgroup>
+                <p-inputgroup-addon>
+                    <i class="pi pi-lock"></i>
+                </p-inputgroup-addon>
+                <p-floatlabel variant="on">
+                    <p-password id="password" formControlName="password" [toggleMask]="true"></p-password>
+                    <label for="password">Password</label>
+                </p-floatlabel>
+            </p-inputgroup>
+        </form>
+        }
+    </p-card>
+    <app-menu [btnLabel]="isNewUser ? 'Register' : 'Login'" [isNewUser]="isNewUser"></app-menu>
+    <div class="flex justify-center items-center">
+        <p-button [label]="isNewUser ? 'Already registered? Log in' : 'I don\'t have an account'" [link]="true"
+            (onClick)="toggleIsNewUser()" />
+    </div>
+</div>
