@@ -14,7 +14,10 @@ import { ToastModule } from 'primeng/toast';
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  providers: [MessageService, HttpClient]
+  providers: [
+    MessageService,
+    HttpClient
+  ]
 })
 export class AppComponent {
 

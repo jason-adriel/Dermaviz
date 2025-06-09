@@ -1,0 +1,10 @@
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../_services/auth.service';
+
+export const redirectIfAuthenticatedGuard: CanActivateFn = () => {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+
+  return !auth.isAuthenticated() || router.parseUrl('/submissions');
+};

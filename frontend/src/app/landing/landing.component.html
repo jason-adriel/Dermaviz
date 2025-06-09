@@ -58,7 +58,7 @@
         </form>
         }
     </p-card>
-    <app-menu [btnLabel]="isNewUser ? 'Register' : 'Login'" [isNewUser]="isNewUser"></app-menu>
+    <app-menu [btnLabel]="isNewUser ? 'Register' : 'Login'" [isNewUser]="isNewUser" [userData]="isNewUser ? registerForm.value : userForm.value"></app-menu>
     <div class="flex justify-center items-center">
         <p-button [label]="isNewUser ? 'Already registered? Log in' : 'I don\'t have an account'" [link]="true"
             (onClick)="toggleIsNewUser()" />
