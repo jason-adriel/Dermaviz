@@ -9,6 +9,7 @@ import models
 import time
 import pandas as pd
 import torch
+import pickle
 from ai import flatten_onehot_jsonb_fields, convert_image_blob_to_pil, run_model
 
 # Global queue
@@ -77,21 +78,21 @@ def process_submission(submission_id: str):
     submission.result_id = result_id # type: ignore
     submission.completion_time = datetime.now(timezone.utc) # type: ignore
     db.commit()
-    db.close()
     print(f"Completed processing for {submission.id}")
+    db.close()
+
 
 
 def save_result_to_db(db: Session, prediction_img_bytes: bytes, probs: list[float]):
     # Map probabilities to labels
-    predictions = {id2label[i]: float(prob) for i, prob in enumerate(probs)}
     top_index = int(torch.tensor(probs).argmax().item())
     top_label = id2label[top_index]
-    str_prediction = f"{top_label} - {probs[top_index]}"
+    str_prediction = f"{top_label} - {round(probs[top_index], 2) * 100}%"
 
     result = models.Result (
-        id=uuid4(),
+        id=str(uuid4()),
         report=prediction_img_bytes,
-        raw_predictions=predictions,
+        raw_predictions=pickle.dumps(probs),
         prediction=str_prediction
     )
     db.add(result)

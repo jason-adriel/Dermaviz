@@ -43,7 +43,7 @@
         </p-fieldset>
     </div>
     <p-fileupload name="file" chooseIcon="pi pi-cloud-upload" [chooseButtonProps]="{'severity': 'secondary'}"
-        [showUploadButton]="false" [showCancelButton]="false" [multiple]="false" accept="image/*" maxFileSize="1000000"
+        [showUploadButton]="false" [showCancelButton]="false" [multiple]="false" accept="image/*" maxFileSize="5000000"
         mode="advanced" (onSelect)="onFileSelect($event)">
         <ng-template #empty>
             <div>Drag and drop an image of the skin area to be diagnosed here.</div>

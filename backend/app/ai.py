@@ -1,3 +1,4 @@
+import pillow_avif 
 from PIL import Image
 from io import BytesIO
 import pandas as pd
@@ -216,14 +217,17 @@ def run_model(df: pd.DataFrame, image):
 
     X_pca = process_dataframe_pipeline(df)
     inputs = imageProcessor(images=image, return_tensors="pt")
-    inputs = {k: v.squeeze(0).to(device) for k, v in inputs.items()}
+    inputs = {k: v.to(device) for k, v in inputs.items()}
+    print(inputs["pixel_values"].shape) 
     tabular_tensor = torch.tensor(X_pca, dtype=torch.float32).to(device)
     loadedModel.eval()
 
     with torch.no_grad():
+        print("Evaluating submission result...")
         log_probs = loadedModel(pixel_values=inputs["pixel_values"], tabular_features=tabular_tensor)
         probs = log_probs.exp().cpu().squeeze().numpy()
         image_bytes = generate_result_image(image, probs, [id2label[i] for i in range(len(probs))])
+        print("Done!")
 
     return probs, image_bytes
 
@@ -236,9 +240,10 @@ def generate_result_image(input_img: Image.Image, probs: list[float], labels: li
     axs[0].axis('off')
     axs[0].set_title("Input Image")
 
-    axs[1].barh(labels, probs)
+    axs[1].barh(labels, probs, color = '#22C55E')
     axs[1].set_xlim(0, 1)
     axs[1].set_title("Predicted Probabilities")
+    axs[1].grid(True, axis='x', linestyle='--', alpha=0.3)
 
     plt.tight_layout()
 

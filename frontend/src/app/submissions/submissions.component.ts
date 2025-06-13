@@ -11,6 +11,8 @@ import { MessageService } from 'primeng/api';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BadgeModule } from 'primeng/badge';
 import { AuthService } from '../_services/auth.service';
+import { DialogModule } from 'primeng/dialog';
+import { ImageModule } from 'primeng/image';
 
 export interface Submission {
   id: string;
@@ -31,7 +33,9 @@ export interface Submission {
     IconFieldModule,
     InputIconModule,
     BadgeModule,
-    CommonModule
+    CommonModule,
+    DialogModule,
+    ImageModule
   ],
   templateUrl: './submissions.component.html',
   styleUrl: './submissions.component.scss'
@@ -43,6 +47,10 @@ export class SubmissionsComponent implements OnInit {
   public rowData: any[] = [];
   public selectedData: any[] = [];
   public isDeleteButtonShown: boolean = false;
+  public isShowDetailDialog: boolean = false;
+  public prediction: string = "";
+  public resultImage: string = "";
+
 
   constructor(
     private router: Router,
@@ -101,6 +109,21 @@ export class SubmissionsComponent implements OnInit {
   } 
 
   protected viewResult(data: any) {
+    
+    this.http.get<Submission[]>(`/api/results/${data.resultId}`).subscribe({
+      next: (data: any) => {
+        this.prediction = data.prediction;
+        this.resultImage = `data:image/png;base64,${data.image}`;
+        this.isShowDetailDialog = true;
+      },
+      error: (err: HttpErrorResponse) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error.',
+          detail: err.error?.detail || err.message || 'An unexpected error occurred.'
+        });
+      }
+    });
 
   }
 

@@ -15,6 +15,7 @@ from worker import start_worker, submission_queue
 from database import engine, SessionLocal
 from schemas import UserCreate, UserOut
 from models import LoginRequest
+import base64
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -199,11 +200,25 @@ def get_my_submissions(db: Session = Depends(get_db), user: models.User = Depend
             "id": sub.id,
             "name": sub.name,
             "status": sub.status,
+            "resultId": sub.result_id,
             "submissionTime": sub.submission_time,
             "completionTime": sub.completion_time
         }
         for sub in submissions
     ]
+
+@app.get("/api/results/{result_id}")
+def get_result(result_id: str, db: Session = Depends(get_db)):
+    result = db.query(models.Result).filter(models.Result.id == result_id).first()
+
+    if not result:
+        raise HTTPException(status_code=404, detail="Result not found")
+
+    return {
+        "id": str(result.id),
+        "prediction": result.prediction,
+        "image": base64.b64encode(result.report).decode("utf-8")  # convert bytes to base64
+    }
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request, exc):
