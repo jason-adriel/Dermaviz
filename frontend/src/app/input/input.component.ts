@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MenuItem, MessageService } from 'primeng/api';
 import { StepsModule } from 'primeng/steps';
 import { MenuComponent } from '../menu/menu.component';
@@ -13,6 +13,9 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-input',
@@ -29,13 +32,16 @@ import { InputNumberModule } from 'primeng/inputnumber';
     FieldsetModule,
     MultiSelectModule,
     SelectModule,
-    InputNumberModule
+    InputNumberModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss'
 })
-export class InputComponent {
+export class InputComponent implements OnInit {
 
+  protected submissionForm!: FormGroup;
   public image: string = "";
   public genderOptions: any[] = [
     {
@@ -199,11 +205,81 @@ export class InputComponent {
     }
   ];
 
-  protected uploadedFiles: any[] = [];
+  protected uploadedFiles: File[] = [];
 
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private messageService: MessageService,
+    private fb: FormBuilder,
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
-  protected addSubmission() {
+  ngOnInit() {
+    this.submissionForm = this.fb.group({
+      submissionName: ['', Validators.required],
+      age: [null, [Validators.required, Validators.min(0), Validators.max(120)]],
+      gender: [null, Validators.required],
+      texture: [[], Validators.required],
+      bodyParts: [[], Validators.required],
+      conditionSymptoms: [[], Validators.required],
+      conditionDuration: [null, Validators.required],
+    });
+  }
+
+  onFileSelect(event: any) {
+    this.uploadedFiles = event.currentFiles;
+  }
+
+  addSubmission() {
+    
+    if (this.submissionForm.invalid) {
+      this.submissionForm.markAllAsTouched();
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error.',
+        detail: 'Invalid submission, please fill all fields.'
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    const formValues = this.submissionForm.value;
+
+    // Append form values
+    Object.keys(formValues).forEach(key => {
+      const value = formValues[key];
+      if (Array.isArray(value)) {
+        value.forEach((v: any) => formData.append(`${key}`, v));
+      } else {
+        formData.append(key, value);
+      }
+    });
+
+    if (this.uploadedFiles.length > 0) {
+      formData.append('file', this.uploadedFiles[0]);
+    }
+
+    console.log(formData)
+    this.http.post('/api/submit-diagnosis', formData, { withCredentials: true }).subscribe({
+      next: response => {
+        this.router.navigate(['/submissions']).then(() => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success.',
+            detail: 'Submission added.'
+          });
+        });
+      },
+      error: err => {
+        console.error('Submission failed:', err);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Submission failed',
+          detail: err?.error?.detail || 'An unexpected error occurred.'
+        });
+      }
+    });
+
 
   }
 

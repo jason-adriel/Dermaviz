@@ -45,7 +45,7 @@ class SubmissionDetail(Base):
     submission_id = Column(String(100), ForeignKey("submissionqueue.id"), nullable=False)
 
     image = Column(LargeBinary, nullable=True)
-    sex_at_birth = Column(CHAR(1), nullable=True)
+    sex_at_birth = Column(String(30), nullable=True)
     age_group = Column(String(30), nullable=True)
     textures = Column(JSONB, nullable=True)
     body_parts = Column(JSONB, nullable=True)
@@ -60,8 +60,8 @@ class Result(Base):
 
     id = Column(String(100), primary_key=True)
 
-    prediction = Column(LargeBinary, nullable=True)
+    raw_predictions = Column(LargeBinary, nullable=True)
     report = Column(LargeBinary, nullable=True)
-    raw_predictions = Column(String(1024), nullable=True)
+    prediction = Column(String(256), nullable=True)
 
     submission = relationship("SubmissionQueue", back_populates="result")

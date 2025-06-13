@@ -4,36 +4,36 @@
 <p-card class="flex flex-col w-screen max-w-md mt-18 m-4">
     <div class="mb-4">
         <p-fieldset legend="Physical Examination Data" styleClass="max-w-md" [toggleable]="true">
-            <form class="flex flex-col gap-2">
-                <p-floatlabel variant="on">
+            <form [formGroup]="submissionForm" class="flex flex-col gap-2" >
+                <p-floatlabel variant="on" > 
                     <input pInputText id="submissionName" formControlName="submissionName" autocomplete="off"
                         [fluid]="true" />
                     <label for="submissionName">Submission Name</label>
                 </p-floatlabel>
                 <div class="flex gap-2">
                     <p-floatlabel variant="on" class="flex w-1/4">
-                        <p-inputnumber id="age" inputId="age" mode="decimal" [min]="0" [max]="120" [maxFractionDigits]="0" [fluid]="true"/>
+                        <p-inputnumber id="age" formControlName="age" inputId="age" mode="decimal" [min]="0" [max]="120" [maxFractionDigits]="0" [fluid]="true"/>
                         <label for="age">Age</label>
                     </p-floatlabel>
                     <p-floatlabel variant="on" class="flex w-3/4">
-                        <p-select id="gender" [options]="genderOptions" optionLabel="name" optionValue="value" [showClear]="true" [fluid]="true"/>
+                        <p-select id="gender" formControlName="gender" [options]="genderOptions" optionLabel="name" optionValue="value" [showClear]="true" [fluid]="true"/>
                         <label for="gender">Gender</label>
                     </p-floatlabel>
                 </div>
                 <p-floatlabel variant="on">
-                    <p-multiselect [maxSelectedLabels]="2" id="texture" optionLabel="name" display="chip" optionLabel="name" optionValue="value" [options]="textureOptions" [fluid]="true"/>
+                    <p-multiselect [maxSelectedLabels]="2" formControlName="texture" id="texture" optionLabel="name" display="chip" optionLabel="name" optionValue="value" [options]="textureOptions" [fluid]="true"/>
                     <label for="texture">Lesion Texture</label>
                 </p-floatlabel>
                 <p-floatlabel variant="on">
-                    <p-multiselect [maxSelectedLabels]="2" id="bodyParts" optionLabel="name" display="chip" optionLabel="name" optionValue="value" [options]="locationOptions" [fluid]="true"/>
+                    <p-multiselect [maxSelectedLabels]="2" formControlName="bodyParts" id="bodyParts" optionLabel="name" display="chip" optionLabel="name" optionValue="value" [options]="locationOptions" [fluid]="true"/>
                     <label for="bodyParts">Location of Lesion</label>
                 </p-floatlabel>
                 <p-floatlabel variant="on">
-                    <p-multiselect [maxSelectedLabels]="2"  id="conditionSymptons" optionLabel="name" display="chip" optionLabel="name" optionValue="value" [options]="symptomsOptions" [fluid]="true"/>
+                    <p-multiselect [maxSelectedLabels]="2" formControlName="conditionSymptoms" id="conditionSymptons" optionLabel="name" display="chip" optionLabel="name" optionValue="value" [options]="symptomsOptions" [fluid]="true"/>
                     <label for="conditionSymptoms">Relevant Symptoms</label>
                 </p-floatlabel>
                 <p-floatlabel variant="on">
-                    <p-select id="conditionDuration" [options]="durationOptions" optionLabel="name" optionValue="value" [showClear]="true" [fluid]="true"/>
+                    <p-select formControlName="conditionDuration" id="conditionDuration" [options]="durationOptions" optionLabel="name" optionValue="value" [showClear]="true" [fluid]="true"/>
                     <label for="conditionDuration">Condition Duration</label>
                 </p-floatlabel>
             </form>
@@ -44,7 +44,7 @@
     </div>
     <p-fileupload name="file" chooseIcon="pi pi-cloud-upload" [chooseButtonProps]="{'severity': 'secondary'}"
         [showUploadButton]="false" [showCancelButton]="false" [multiple]="false" accept="image/*" maxFileSize="1000000"
-        mode="advanced">
+        mode="advanced" (onSelect)="onFileSelect($event)">
         <ng-template #empty>
             <div>Drag and drop an image of the skin area to be diagnosed here.</div>
         </ng-template>

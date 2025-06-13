@@ -149,3 +149,6 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+backend/pca.pkl
+backend/model_resnet50_gated_randaug.pth
+backend/scaler.pkl

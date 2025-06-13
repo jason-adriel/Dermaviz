@@ -7,6 +7,8 @@
         <p-button class="md:hidden" [hidden]="!isDeleteButtonShown" icon="pi pi-trash" severity="danger" rounded />
     </div>
     <div class="flex gap-2">
+        <p-button class="max-md:hidden" label="Refresh" icon="pi pi-sync" severity="info" rounded (onClick)="refresh()" />
+        <p-button class="md:hidden" icon="pi pi-sync" severity="info" rounded (onClick)="refresh()" />
         <p-button class="max-md:hidden" label="Add Diagnosis" icon="pi pi-plus" severity="primary" rounded (onClick)="addSubmission()" />
         <p-button class="md:hidden" icon="pi pi-plus" severity="primary" rounded (onClick)="addSubmission()" />
         <div class="max-w-sm">
@@ -20,7 +22,7 @@
         </div>
     </div>
 </div>
-<p-table #submissions responsiveLayout="scroll" size="small" sortMode="multiple"
+<p-table #submissions responsiveLayout="scroll" size="small" sortMode="multiple" 
     (onHeaderCheckboxToggle)="onRowSelectChange()" (onRowSelect)="onRowSelectChange()"
     (onRowUnselect)="onRowSelectChange()" [globalFilterFields]="['name', 'status', 'submissionTime']"
     [(selection)]="selectedData" [tableStyle]="{'min-width': '90vw'}" [scrollable]="true" [value]="rowData"
@@ -31,7 +33,7 @@
             <th style="width: 1rem; text-align: center;">No.</th>
             <th pSortableColumn="name" style="width: 15rem; text-align: center;">Submission Name</th>
             <th pSortableColumn="submissionTime" class="max-md:hidden" style="width: 5rem; text-align: center;">Submission Time</th>
-            <th pSortableColumn="elapsedTime" class="max-md:hidden" style="width: 5rem; text-align: center;">Elapsed Time</th>
+            <th pSortableColumn="elapsedTime" class="max-md:hidden" style="width: 5rem; text-align: center;">Completion Time</th>
             <th pSortableColumn="status" style="width: 5rem; text-align: center;">Status</th>
             <th style="width: 1rem; text-align: center;">Result</th>
         </tr>
@@ -43,11 +45,11 @@
             </td>
             <td style="text-align: center;">{{index + 1}}</td>
             <td style="text-align: center;">{{row.name}}</td>
-            <td class="max-md:hidden" style="text-align: center;">{{row.submissionTime | date}}</td>
-            <td class="max-md:hidden" style="text-align: center;">{{row.elapsedTime | date}}</td>
-            <td style="text-align: center;">{{row.status}}</td>
+            <td class="max-md:hidden" style="text-align: center;">{{row.submissionTime | date:'dd/MM/yy, h:mm a'}}</td>
+            <td class="max-md:hidden" style="text-align: center;">{{(row.completionTime | date:'dd/MM/yy, h:mm a') ?? '-'}}</td>
+            <td style="text-align: center;"><p-badge [value]="row.status" [severity]="statusSeverity(row.status)" /></td>
             <td style="text-align: center;">
-                <p-button icon="pi pi-eye" (click)="viewResult(row)" severity="secondary" rounded />
+                <p-button [disabled]="row.status !== 'DONE'" icon="pi pi-eye" (click)="viewResult(row)" severity="contrast" rounded />
             </td>
         </tr>
     </ng-template>

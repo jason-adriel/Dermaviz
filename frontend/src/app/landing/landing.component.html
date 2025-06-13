@@ -8,7 +8,7 @@
                     <i class="pi pi-envelope"></i>
                 </p-inputgroup-addon>
                 <p-floatlabel variant="on">
-                    <input pInputText id="email" formControlName="email" autocomplete="off" />
+                    <input pInputText id="email" formControlName="email" autocomplete="off" [required]="true"/>
                     <label for="email">Email</label>
                 </p-floatlabel>
             </p-inputgroup>
@@ -17,7 +17,7 @@
                     <i class="pi pi-lock"></i>
                 </p-inputgroup-addon>
                 <p-floatlabel variant="on">
-                    <p-password id="password" formControlName="password" [toggleMask]="true"></p-password>
+                    <p-password id="password" formControlName="password" [feedback]="false" [toggleMask]="true" [required]="true"></p-password>
                     <label for="password">Password</label>
                 </p-floatlabel>
             </p-inputgroup>
@@ -29,11 +29,11 @@
             <p>Get an <span class="color-primary font-light">automatic differential diagnosis</span> on skin conditions using the power of AI — no doctor visit needed.</p>
             <p-inputgroup>
                 <p-floatlabel variant="on">
-                    <input pInputText id="firstName" formControlName="firstName" autocomplete="off" />
+                    <input pInputText id="firstName" formControlName="firstName" autocomplete="off" [required]="true"/>
                     <label for="firstName">First Name</label>
                 </p-floatlabel>
                 <p-floatlabel variant="on">
-                    <input pInputText id="lastName" formControlName="lastName" autocomplete="off" />
+                    <input pInputText id="lastName" formControlName="lastName" autocomplete="off" [required]="true"/>
                     <label for="lastName">Last Name</label>
                 </p-floatlabel>
             </p-inputgroup>
@@ -42,7 +42,7 @@
                     <i class="pi pi-envelope"></i>
                 </p-inputgroup-addon>
                 <p-floatlabel variant="on">
-                    <input pInputText id="email" formControlName="email" autocomplete="off" />
+                    <input pInputText id="email" formControlName="email" autocomplete="off" [required]="true"/>
                     <label for="email">Email</label>
                 </p-floatlabel>
             </p-inputgroup>
@@ -51,14 +51,14 @@
                     <i class="pi pi-lock"></i>
                 </p-inputgroup-addon>
                 <p-floatlabel variant="on">
-                    <p-password id="password" formControlName="password" [toggleMask]="true"></p-password>
+                    <p-password id="password" formControlName="password" [toggleMask]="true" [required]="true"></p-password>
                     <label for="password">Password</label>
                 </p-floatlabel>
             </p-inputgroup>
         </form>
         }
     </p-card>
-    <app-menu [btnLabel]="isNewUser ? 'Register' : 'Login'" [isNewUser]="isNewUser" [userData]="isNewUser ? registerForm.value : userForm.value"></app-menu>
+    <app-menu [btnLabel]="isNewUser ? 'Register' : 'Login'" [isNewUser]="isNewUser" [userForm]="isNewUser ? registerForm : userForm"></app-menu>
     <div class="flex justify-center items-center">
         <p-button [label]="isNewUser ? 'Already registered? Log in' : 'I don\'t have an account'" [link]="true"
             (onClick)="toggleIsNewUser()" />

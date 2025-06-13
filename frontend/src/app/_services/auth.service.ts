@@ -7,16 +7,16 @@ import { BehaviorSubject, tap } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   
-  private tokenKey = 'auth_token';
+  private tokenKey = 'access_token';
   isLoggedIn$ = new BehaviorSubject<boolean>(this.hasToken());
 
   constructor(private http: HttpClient, private router: Router) {}
 
   login(email: string, password: string) {
-    return this.http.post<{ token: string }>(`/api/login`, { email, password })
+    return this.http.post<{ access_token: string }>(`/api/login`, { email, password })
       .pipe(
         tap(response => {
-          localStorage.setItem(this.tokenKey, response.token);
+          localStorage.setItem(this.tokenKey, response.access_token);
           this.isLoggedIn$.next(true);
         })
       );

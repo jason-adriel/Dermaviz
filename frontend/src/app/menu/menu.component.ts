@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AuthService } from '../_services/auth.service';
 import { HttpClient } from '@angular/common/http';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-menu',
@@ -26,10 +27,9 @@ export class MenuComponent {
   public menuItems: MenuItem[] = [];
   public isDarkMode: boolean = true;
   public isShowInfoDialog: boolean = false;
-  public isShowUserSettingsDialog: boolean = false;
 
   @Input('btnLabel') btnLabel: string = "Login";
-  @Input('userData') userData: any;
+  @Input('userForm') userForm?: FormGroup;
   @Input('isUserAuthenticated') isUserAuthenticated: boolean = false;
   @Input('isNewUser') isNewUser: boolean = false;
   @Input('isUsingBackButton') isUsingBackButton: boolean = false;
@@ -62,10 +62,10 @@ export class MenuComponent {
       this.logout();
     } 
     else if (this.isNewUser) {
-      this.register(this.userData);
+      this.register(this.userForm?.value);
     }
     else {
-      this.authenticateUser(this.userData.email, this.userData.password);
+      this.authenticateUser(this.userForm?.value.email, this.userForm?.value.password);
     }
 
     this.btnClick.emit();
@@ -73,11 +73,7 @@ export class MenuComponent {
   }
 
   protected showDialog() {
-    if (this.isUserAuthenticated) {
-      this.isShowUserSettingsDialog = true;
-    } else {
-      this.isShowInfoDialog = true;
-    }
+    this.isShowInfoDialog = true;
   }
 
   protected toggleDarkMode() {
@@ -94,7 +90,7 @@ export class MenuComponent {
           this.messageService.add({
             severity: 'success',
             summary: 'Success.',
-            detail: this.isNewUser ? 'Account created successfully.' : 'User logged in successfully.'
+            detail: 'User logged in successfully.'
           });
         });
       },
@@ -102,7 +98,7 @@ export class MenuComponent {
         this.messageService.add({
           severity: 'error',
           summary: 'Error.',
-          detail: err.detail
+          detail: err.error?.detail || err.message || 'An unexpected error occurred.'
         });
       }
     });
@@ -118,7 +114,7 @@ export class MenuComponent {
         this.messageService.add({
           severity: 'error',
           summary: 'Error.',
-          detail: err.detail
+          detail: 'Invalid user registration data.'
         });
       }
     })

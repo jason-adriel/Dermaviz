@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { MessageService, SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { MenubarModule } from 'primeng/menubar';
@@ -7,7 +7,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { CardModule } from 'primeng/card';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormControl, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { trigger, transition, style, animate } from '@angular/animations';
@@ -41,16 +41,18 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class LandingComponent {
 
+  @ViewChild('formInput') formInput!: NgForm;
+
   public userForm = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl('')
+    email: new FormControl('', Validators.required),
+    password: new FormControl('', Validators.required)
   });
 
   public registerForm = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl(''),
-    firstName: new FormControl(''),
-    lastName: new FormControl('')
+    email: new FormControl('', Validators.required),
+    password: new FormControl('', Validators.required),
+    firstName: new FormControl('', Validators.required),
+    lastName: new FormControl('', Validators.required)
   });
 
   public isNewUser: boolean = true;
