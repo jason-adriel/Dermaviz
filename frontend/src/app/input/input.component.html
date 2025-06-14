@@ -59,3 +59,26 @@
             (onClick)="addSubmission()" />
     </div>
 </p-card>
+
+<p-dialog header="Field Guide" [appendTo]="'body'" [modal]="true" [(visible)]="isShowInfoDialog" [maximizable]="true" styleClass="max-w-md">
+    <p><p-badge value="Submission Name" severity="contrast"/><br>
+    A custom label or name for this examination. This helps you identify or organize submissions later.</p>
+    <br>
+    <p><p-badge value="Age" severity="contrast"/><br>
+    The age group of the person with the skin condition. Age can influence diagnosis, as some conditions are more common in certain age ranges.</p>
+    <br>
+    <p><p-badge value="Gender" severity="contrast"/><br>
+    The biological sex at birth of the person. Some skin conditions may present differently in males vs. females.</p>
+    <br>
+    <p><p-badge value="Lesion Texture" severity="contrast"/><br>
+    Describes the feel or surface of the lesion (e.g. rough, scaly, smooth). Texture helps in narrowing down possible conditions.</p>
+    <br>
+    <p><p-badge value="Location of Lesion" severity="contrast"/><br>
+    Indicates where on the body the skin issue appears. Certain skin conditions tend to occur in specific areas (e.g. scalp, arms, torso).</p>
+    <br>
+    <p><p-badge value="Relevant Symptoms" severity="contrast"/><br>
+    Additional symptoms accompanying the lesion, such as itching, pain, or swelling. This contextual information is vital for accurate assessment.</p>
+    <br>
+    <p><p-badge value="Condition Duration" severity="contrast"/><br>
+    How long the condition has been present — whether it's new or chronic. This helps distinguish between acute and long-term issues.</p>
+</p-dialog>

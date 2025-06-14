@@ -7,6 +7,7 @@ from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
 from typing import Optional, List
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from uuid import uuid4
 from dotenv import load_dotenv
 import models, schemas, crud
@@ -29,11 +30,14 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 app = FastAPI()
 
-origins = ["http://localhost:4200"]  # Modify for production
+origins = ["http://localhost:4200", "https://ringtail-regular-arguably.ngrok-free.app"]  # Modify for production
 app.add_middleware(
     CORSMiddleware, allow_origins=origins, allow_credentials=True,
     allow_methods=["*"], allow_headers=["*"],
 )
+
+class DeleteRequest(BaseModel):
+    ids: List[str]
 
 # Dependency
 def get_db():
@@ -76,6 +80,19 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
 def startup_event():
     print("Worker started!")
     start_worker()
+
+@app.delete("/api/submissions")
+def delete_submissions(request: DeleteRequest, db: Session = Depends(get_db)):
+    submissions = db.query(models.SubmissionQueue).filter(models.SubmissionQueue.id.in_(request.ids)).all()
+
+    if not submissions:
+        raise HTTPException(status_code=404, detail="No matching submissions found")
+
+    for submission in submissions:
+        db.delete(submission)
+
+    db.commit()
+
 
 @app.post("/api/register", response_model=UserOut)
 def register(user: UserCreate, db: Session = Depends(get_db)):

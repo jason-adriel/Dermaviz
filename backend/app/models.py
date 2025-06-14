@@ -3,6 +3,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from database import Base
 from pydantic import BaseModel
+from typing import Optional, List
 
 class LoginRequest(BaseModel):
     email: str
@@ -35,7 +36,7 @@ class SubmissionQueue(Base):
 
     user = relationship("User", back_populates="submissions")
     result = relationship("Result", back_populates="submission", uselist=False)
-    details = relationship("SubmissionDetail", back_populates="submission")
+    details = relationship("SubmissionDetail", back_populates="submission", cascade="all, delete-orphan")
 
 
 class SubmissionDetail(Base):
@@ -65,3 +66,4 @@ class Result(Base):
     prediction = Column(String(256), nullable=True)
 
     submission = relationship("SubmissionQueue", back_populates="result")
+

@@ -3,8 +3,8 @@
 </div>
 <div class="flex justify-between mb-4 gap-2">
     <div>
-        <p-button class="max-md:hidden" [hidden]="!isDeleteButtonShown" label="Delete" icon="pi pi-trash" severity="danger" rounded />
-        <p-button class="md:hidden" [hidden]="!isDeleteButtonShown" icon="pi pi-trash" severity="danger" rounded />
+        <p-button class="max-md:hidden" [hidden]="!isDeleteButtonShown" label="Delete" icon="pi pi-trash" severity="danger" rounded (onClick)="deleteSubmissions()" />
+        <p-button class="md:hidden" [hidden]="!isDeleteButtonShown" icon="pi pi-trash" severity="danger" rounded (onClick)="deleteSubmissions()"/>
     </div>
     <div class="flex gap-2">
         <p-button class="max-md:hidden" label="Refresh" icon="pi pi-sync" severity="info" rounded (onClick)="refresh()" />

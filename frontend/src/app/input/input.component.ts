@@ -16,6 +16,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-input',
@@ -34,13 +35,15 @@ import { Router } from '@angular/router';
     SelectModule,
     InputNumberModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DialogModule
   ],
   templateUrl: './input.component.html',
   styleUrl: './input.component.scss'
 })
 export class InputComponent implements OnInit {
 
+  protected isShowInfoDialog = false;
   protected submissionForm!: FormGroup;
   public image: string = "";
   public genderOptions: any[] = [
@@ -275,7 +278,7 @@ export class InputComponent implements OnInit {
         this.messageService.add({
           severity: 'error',
           summary: 'Submission failed',
-          detail: err?.error?.detail || 'An unexpected error occurred.'
+          detail: err?.error?.detail || 'An unexpected error occurred. File limit size is 5MB.'
         });
       }
     });
@@ -284,7 +287,7 @@ export class InputComponent implements OnInit {
   }
 
   protected showInfoDialog() {
-    
+    this.isShowInfoDialog = true;
   }
 
 }

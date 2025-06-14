@@ -50,6 +50,7 @@ export class SubmissionsComponent implements OnInit {
   public isShowDetailDialog: boolean = false;
   public prediction: string = "";
   public resultImage: string = "";
+  private intervalId: any;
 
 
   constructor(
@@ -64,23 +65,77 @@ export class SubmissionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.http.get<Submission[]>('/api/submissions').subscribe({
-      next: (data) => {
-        this.rowData = data;
-      },
-      error: (err: HttpErrorResponse) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error.',
-          detail: err.error?.detail || err.message || 'An unexpected error occurred.'
-        });
-        this.authService.logout();
-      }
+    this.fetchData();
+    this.startPolling();
+  }
+
+  fetchData(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.http.get<Submission[]>('/api/submissions').subscribe({
+        next: (data) => {
+          this.rowData = data;
+          resolve(); // wait until data is set
+        },
+        error: (err: HttpErrorResponse) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error.',
+            detail: err.error?.detail || err.message || 'An unexpected error occurred.'
+          });
+          this.authService.logout();
+          reject(err);
+        }
+      });
     });
   }
 
+
+  ngOnDestroy() {
+    clearInterval(this.intervalId);
+  } 
+
   protected refresh() {
     this.ngOnInit();
+  }
+
+  protected deleteSubmissions() {
+    const ids = this.selectedData.map(item => item.id);
+    this.http.delete<{ deleted: number }>(
+      '/api/submissions/', 
+      {
+        body: { ids },
+        headers: { 'Content-Type': 'application/json' }
+      }
+    ).subscribe({
+    next: (res) => {
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Success.',
+        detail: 'Items deleted.'
+      });
+      this.ngOnInit(); 
+      this.selectedData = [];
+      this.isDeleteButtonShown = false;
+    },
+    error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error.',
+          detail: 'An unexpected error occured.'
+        });
+    }
+    });
+
+  }
+
+  protected startPolling() {
+    this.intervalId = setInterval(() => {
+      this.fetchData().then(() => {
+        if (!this.hasPendingSubmissions()) {
+          clearInterval(this.intervalId);
+        }
+      });
+    }, 10000);
   }
 
   protected statusSeverity(status: string): "info" | "success" | "warn" | "danger" | "secondary" | "contrast" {
@@ -129,6 +184,12 @@ export class SubmissionsComponent implements OnInit {
 
   protected addSubmission() {
     this.router.navigate(['/input']);
+  }
+
+  hasPendingSubmissions(): boolean {
+    return this.rowData?.some(sub => 
+      sub.status === 'IN QUEUE' || sub.status === 'PROCESSING'
+    );
   }
 
 }

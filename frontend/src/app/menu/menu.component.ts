@@ -47,10 +47,10 @@ export class MenuComponent {
   }
 
   ngOnInit(): void {
-    if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-      this.isDarkMode = false;
-      this.toggleDarkMode();
-    }
+    // if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+    //   this.isDarkMode = false;
+    //   this.toggleDarkMode();
+    // }
   }
 
   protected onClick() {
