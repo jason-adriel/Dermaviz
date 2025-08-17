@@ -1,4 +1,4 @@
-import { Component, InputSignal, OnInit, ViewChild } from '@angular/core';
+import { Component, InputSignal, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Table, TableModule } from 'primeng/table';
 import { MenuComponent } from '../menu/menu.component';
 import { InputTextModule } from 'primeng/inputtext';
@@ -40,7 +40,7 @@ export interface Submission {
   templateUrl: './submissions.component.html',
   styleUrl: './submissions.component.scss'
 })
-export class SubmissionsComponent implements OnInit {
+export class SubmissionsComponent implements OnInit, OnDestroy {
 
   @ViewChild('submissions') tableSubmissions!: Table;
 
@@ -69,6 +69,10 @@ export class SubmissionsComponent implements OnInit {
     this.startPolling();
   }
 
+  ngOnDestroy(): void {
+    this.stopPolling();
+  }
+
   fetchData(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.http.get<Submission[]>('/api/submissions').subscribe({
@@ -88,11 +92,6 @@ export class SubmissionsComponent implements OnInit {
       });
     });
   }
-
-
-  ngOnDestroy() {
-    clearInterval(this.intervalId);
-  } 
 
   protected refresh() {
     this.ngOnInit();
@@ -136,6 +135,10 @@ export class SubmissionsComponent implements OnInit {
         }
       });
     }, 10000);
+  }
+
+  protected stopPolling() {
+    clearInterval(this.intervalId);
   }
 
   protected statusSeverity(status: string): "info" | "success" | "warn" | "danger" | "secondary" | "contrast" {
